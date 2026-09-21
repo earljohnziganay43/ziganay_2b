@@ -1,3 +1,17 @@
+<?php 
+    session_start();
+    include "../../config/database.php";
+    //only admin can acccess this page
+    if(!isset($_SESSION["role"]) || $_SESSION ["role"] != "admin") {
+        header("Location: ../../index.php");
+        exit();
+    }
+    $sql = "SELECT * FROM subjects ORDER BY id DESC ";
+    $result = mysqli_query($conn, $sql);
+
+?>
+
+
 <!doctype html>
 <html lang="en">
 
@@ -47,7 +61,9 @@
         <div class="d-flex justify-content-between mb-3">
 
             <div>
-                <h2>Subjects</h2>
+                <h2>Subjects
+                    
+                </h2>
 
                 <a href="dashboard.html">
                     ← Dashboard
@@ -55,7 +71,7 @@
             </div>
 
             <a
-                href="subject_form.html"
+                href="create.php"
                 class="btn btn-primary"
             >
                 + Add Subject
@@ -82,14 +98,20 @@
                     <tbody>
 
                         <!-- Subject Record -->
+                                                  <?php while($row = mysqli_fetch_assoc($result)){ ?>
+
                         <tr>
-                            <td>IT101</td>
+                            <td><?php echo htmlspecialchars($row["subject_code"]) ?></td>
+
+                            
 
                             <td>
-                                Introduction to Computing
+                                <?php echo htmlspecialchars($row["subject_name"]) ?>
                             </td>
 
-                            <td>3</td>
+                            <td>
+                                <?php echo htmlspecialchars($row["units"]) ?>
+                            </td>
 
                             <td>
                                 <a
@@ -106,7 +128,7 @@
                                 </button>
                             </td>
                         </tr>
-
+       <?php } ?>
                     </tbody>
 
                 </table>
