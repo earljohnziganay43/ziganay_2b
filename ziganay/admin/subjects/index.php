@@ -1,17 +1,15 @@
-<?php 
-    session_start();
-    include "../../config/database.php";
-    //only admin can acccess this page
-    if(!isset($_SESSION["role"]) || $_SESSION ["role"] != "admin") {
-        header("Location: ../../index.php");
-        exit();
-    }
-    $sql = "SELECT * FROM subjects ORDER BY id DESC ";
-    $result = mysqli_query($conn, $sql);
+<?php
+session_start();
+include "../../config/database.php";
+// only admin and access this page.
+if(!isset($_SESSION["role"]) || $_SESSION["role"] != "admin"){
+    header("Location: ../../index.php");
+    exit;
+}
+$sql = "SELECT * FROM subjects ORDER BY id ASC";
+$result = mysqli_query($conn, $sql);
 
 ?>
-
-
 <!doctype html>
 <html lang="en">
 
@@ -46,24 +44,24 @@
 
             <a
                 class="navbar-brand"
-                href="dashboard.php"
+                href="dashboard.html"
             >
                 Student Portal Admin
             </a>
 
         </div>
-    </nav>
+    </nav>  
 
     <!-- Main Content -->
     <div class="container py-4">
-
+            <?php if (isset($_GET["message"])) { ?>
+            <div class="alert alert-success"><?php echo htmlspecialchars($_GET["message"]); ?></div>
+             <?php } ?>
         <!-- Header Section -->
         <div class="d-flex justify-content-between mb-3">
 
             <div>
-                <h2>Subjects
-                    
-                </h2>
+                <h2>Subjects</h2>
 
                 <a href="../dashboard.php">
                     ← Dashboard
@@ -88,49 +86,58 @@
 
                     <thead>
                         <tr>
-                            <th>Code</th>
-                            <th>Subject Name</th>
+                            <th>subject_Code</th>
+                            <th>Subject_Name</th>
                             <th>Units</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
 
                     <tbody>
 
                         <!-- Subject Record -->
-                                                  <?php while($row = mysqli_fetch_assoc($result)){ ?>
-
+                         
+                        <?php while($row = mysqli_fetch_assoc($result)){?>
                         <tr>
-                            <td><?php echo htmlspecialchars($row["subject_code"]) ?></td>
-
-                            
+                            <td><?php echo htmlspecialchars($row["subject_code"]); ?></td>
 
                             <td>
-                                <?php echo htmlspecialchars($row["subject_name"]) ?>
+                                <?php echo htmlspecialchars($row["subject_name"]); ?>
                             </td>
 
                             <td>
-                                <?php echo htmlspecialchars($row["units"]) ?>
-                            </td>
+                                <?php echo htmlspecialchars($row["units"]); ?> </td>
 
                             <td>
+
                                 <a
-                                    href="edit.php?id=<?php echo $row['id'];?>"
-                                    class="btn btn-warning btn-sm"
+                                  href="edit.php?id=<?php echo $row['id']; ?>"
+                                 class="btn btn-warning btn-sm"
                                 >
-                                    Edit
+                                Edit
                                 </a>
 
-                                <a
-                                    href="deletes.php?id=<?php echo $row['id'];?>"
+                                <form
+                                action="delete.php"
+                                method="POST"
+                                style="display:inline;"
+                                onsubmit="return confirm('Are you sure you want to delete this subject?');"
+                                >
+                                    <input
+                                    type="hidden"
+                                    name="id"
+                                    value="<?php echo $row['id']; ?>"
+                                    >
+
+                                   <a
+                                    href="deletesub.php?id=<?php echo $row['id'];?>"
                                     class="btn btn-danger btn-sm"
                                     onclick="return confirm('are you sure you want to delete this record?')"
                                 >
                                     Delete
-                                </a>
+                                </form>
                             </td>
                         </tr>
-       <?php } ?>
+                    <?php } ?>
                     </tbody>
 
                 </table>
