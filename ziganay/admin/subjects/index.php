@@ -46,7 +46,7 @@
 
             <a
                 class="navbar-brand"
-                href="dashboard.html"
+                href="dashboard.php"
             >
                 Student Portal Admin
             </a>
@@ -65,7 +65,7 @@
                     
                 </h2>
 
-                <a href="dashboard.html">
+                <a href="../dashboard.php">
                     ← Dashboard
                 </a>
             </div>
@@ -115,17 +115,19 @@
 
                             <td>
                                 <a
-                                    href="subject_form.html"
+                                    href="edit.php?id=<?php echo $row['id'];?>"
                                     class="btn btn-warning btn-sm"
                                 >
                                     Edit
                                 </a>
 
-                                <button
+                                <a
+                                    href="deletes.php?id=<?php echo $row['id'];?>"
                                     class="btn btn-danger btn-sm"
+                                    onclick="return confirm('are you sure you want to delete this record?')"
                                 >
                                     Delete
-                                </button>
+                                </a>
                             </td>
                         </tr>
        <?php } ?>
